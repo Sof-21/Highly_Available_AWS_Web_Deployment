@@ -1,0 +1,40 @@
+name: Terraform Destroy Deployed items
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  terraform-Destroy:
+    runs-on: ubuntu-latest
+
+    # Prevent accidental deployments if someone triggers this from a non-main branch
+    if: github.ref == 'refs/heads/main'
+
+    environment: production
+
+    steps:
+    - name: Checkout Git repository
+      uses: actions/checkout@v4
+
+    - name: Configure Aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.TF_AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Initialize Terraform
+      working-directory: terraform
+      run: terraform init
+
+    - name: Terraform Destroy
+      working-directory: terraform
+      env:
+        TF_VAR_admin_ip: ${{ secrets.TF_ADMIN_IP }}
+        TF_VAR_node_name_a: ${{ vars.NODE_NAME_A }}
+        TF_VAR_node_name_b: ${{ vars.NODE_NAME_B }}
+      run: terraform destroy -auto-approve
