@@ -11,6 +11,8 @@ jobs:
     # Prevent accidental deployments if someone triggers this from a non-main branch
     if: github.ref == 'refs/heads/main'
 
+    environment: production
+
     steps:
     - name: Checkout Git repository
       uses: actions/checkout@v4
