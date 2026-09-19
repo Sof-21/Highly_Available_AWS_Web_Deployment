@@ -25,6 +25,9 @@ jobs:
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v3
 
+    - name: Create EC2 Keypairs
+      run: sh keypairGenerator.sh
+
     - name: Initialize Terraform
       working-directory: terraform
       run: terraform init
