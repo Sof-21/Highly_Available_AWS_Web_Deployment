@@ -24,6 +24,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
+    # create key pairs for terraform, this will just be used to by pass key not found error when running terraform destroy.
+    - name: create key pairs
+      run: sh keypairGenerator.sh
+
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v3
 
