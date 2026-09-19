@@ -46,8 +46,8 @@ jobs:
       working-directory: terraform
       env:
         TF_VAR_admin_ip: ${{ secrets.TF_ADMIN_IP }}
-        TF_VAR_webserver_1_name: ${{ vars.WEB_SERVER_1_NAME }}
-        TF_VAR_webserver_2_name: ${{ vars.WEB_SERVER_2_NAME }}
+        TF_VAR_node_name_a: ${{ vars.NODE_NAME_A }}
+        TF_VAR_node_name_b: ${{ vars.NODE_NAME_B }}
       run: terraform plan
 
     - name: Terraform Deploy
