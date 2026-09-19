@@ -39,8 +39,16 @@ jobs:
 
     - name: Terraform Plan
       working-directory: terraform
+      env:
+        TF_VAR_admin_ip: ${{ secrets.TF_ADMIN_IP }}
+        TF_VAR_webserver_1_name: ${{ vars.WEB_SERVER_1_NAME }}
+        TF_VAR_webserver_2_name: ${{ vars.WEB_SERVER_2_NAME }}
       run: terraform plan
 
     - name: Terraform Deploy
       working-directory: terraform
+      env:
+        TF_VAR_admin_ip: ${{ secrets.TF_ADMIN_IP }}
+        TF_VAR_webserver_1_name: ${{ vars.WEB_SERVER_1_NAME }}
+        TF_VAR_webserver_2_name: ${{ vars.WEB_SERVER_2_NAME }}
       run: terraform apply -auto-approve
