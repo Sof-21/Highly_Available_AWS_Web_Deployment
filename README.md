@@ -23,7 +23,7 @@ Git is used as the source of truth for the infrastructure code, while Terraform 
 
 ## Architecture
 
-![AWS architecture diagram](Image/architecture.png)
+![AWS architecture diagram](Image/ha_vpc.png)
 The architecture separates public-facing components from the private application tier while distributing the web servers across multiple Availability Zones.
 
 ## Architecture Decisions
