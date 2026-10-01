@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     # Prevent accidental deployments if someone triggers this from a non-main branch
-    #if: github.ref == 'refs/heads/cicd'
+    if: github.ref == 'refs/heads/cicd'
 
-    #environment: staging
+    environment: staging
 
     # allows workflow to request for OIDC token
     permissions:
