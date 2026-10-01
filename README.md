@@ -23,7 +23,7 @@ Git is used as the source of truth for the infrastructure code, while Terraform 
 
 ## Architecture
 
-![AWS architecture diagram](Image/architecture.png)
+![AWS architecture diagram](Image/ha_vpc.png)
 The architecture separates public-facing components from the private application tier while distributing the web servers across multiple Availability Zones.
 
 ## Architecture Decisions
@@ -225,6 +225,14 @@ For a production environment, potential enhancements would include:
 - IAM roles instead of long-lived credentials
 - Automated patch management
 - Additional observability and alerting
+
+ ### CI/CD deployment
+
+Currently GitHub Actions can provision the infrastructure using Terraform.
+> [!CAUTION]
+ Current limitation: The workflow uses Terraform's local state, which is stored on the ephemeral GitHub Actions runner. Consequently, a separate destroy workflow cannot access the state    created by the deployment workflow. As a result manual removal of the resources will be required.
+
+Future improvement: Configure a remote Terraform backend, such as Amazon S3, with appropriate state locking and access controls. This would allow separate CI/CD workflows to share    persistent Terraform state safely.
 
 ## Cost Considerations
 
