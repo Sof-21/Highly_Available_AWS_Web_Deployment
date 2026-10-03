@@ -218,6 +218,8 @@ Current limitations include:
 - Centralized logging and monitoring have not been implemented.
 - The NAT architecture uses a single NAT Gateway, which introduces an AZ-level dependency.
 - The bastion host is used for administrative access rather than a managed access solution.
+- The EC2 instances are statically provisioned and are not managed by an Auto Scaling Group. If an instance fails, it will not be automatically replaced.
+- Terraform state is currently stored locally on the GitHub Actions runner, preventing separate workflows from sharing persistent state.
 ### Production Enhancements
 For a production environment, potential enhancements would include:
 
@@ -227,6 +229,9 @@ For a production environment, potential enhancements would include:
 - Centralized logging and monitoring
 - Automated patch management
 - Additional observability and alerting
+- Deploy the application tier using an Auto Scaling Group with a Launch Template and configurable scaling policies.
+- Managed administrative access using AWS Systems Manager Session Manager
+- Remote Terraform state using Amazon S3 with appropriate state locking and access controls
 
  ### CI/CD deployment
 **Important**: The `GithubActionsTerraformRole` must be created and configured in AWS before running the GitHub Actions deployment workflow. The role can be created through the AWS Console or AWS CLI.
