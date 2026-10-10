@@ -1,0 +1,17 @@
+# Use the below as an example, if you want to custom values for your variables.
+# Note: all the below values are just examples and none hold true in this project.
+
+# AWS configuration
+region        = "us-east-1"
+instance_type = "t2.micro"
+ami           = "ami-0e34b50e714a297f1"
+
+# Admin access
+admin_ip = "93.151.22.201/32"
+
+# Web server names
+node_name_a = "Web-Server-A"
+node_name_b = "Web-Server-B"
+
+# Terraform state bucket
+backend_bucket_name = "my-tf-state-bucket"
