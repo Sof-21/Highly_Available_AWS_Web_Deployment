@@ -219,7 +219,8 @@ Current limitations include:
 - The NAT architecture uses a single NAT Gateway, which introduces an AZ-level dependency.
 - The bastion host is used for administrative access rather than a managed access solution.
 - The EC2 instances are statically provisioned and are not managed by an Auto Scaling Group. If an instance fails, it will not be automatically replaced.
-- Terraform state is currently stored locally on the GitHub Actions runner, preventing separate workflows from sharing persistent state.
+- Terraform s3 backend is not configured with s3 versioning due to this project being a demo
+
 ### Production Enhancements
 For a production environment, potential enhancements would include:
 
@@ -231,7 +232,7 @@ For a production environment, potential enhancements would include:
 - Additional observability and alerting
 - Deploy the application tier using an Auto Scaling Group with a Launch Template and configurable scaling policies.
 - Managed administrative access using AWS Systems Manager Session Manager
-- Remote Terraform state using Amazon S3 with appropriate state locking and access controls
+- Enable S3 bucket versioning for the Terraform state backend to retain previous state versions, allowing recovery from accidental overwrites or state corruption. Configure appropriate lifecycle policies to manage storage costs and retention.
 
  ### CI/CD deployment
 **Important**: The `GithubActionsTerraformRole` must be created and configured in AWS before running the GitHub Actions deployment workflow. The role can be created through the AWS Console or AWS CLI.
@@ -249,7 +250,7 @@ You can retrieve the repository and owner IDs using the GitHub API:
 curl -s https://api.github.com/repos/<username>/<repo_name> | grep -E '"id":|"login":'
 ```
 
-he GitHub Actions workflow uses an AWS IAM role with a federated principal referencing the GitHub OIDC provider configured under IAM → Identity providers.
+The GitHub Actions workflow uses an AWS IAM role with a federated principal referencing the GitHub OIDC provider configured under IAM → Identity providers.
 
 Example trust policy:
 ```
@@ -281,10 +282,24 @@ The sub condition restricts role assumption to GitHub Actions running from the s
 
 This prevents other repositories from using the same IAM role, even if they have access to the GitHub OIDC provider.
 
-> [!CAUTION]
- Current limitation: The workflow uses Terraform's local state, which is stored on the ephemeral GitHub Actions runner. Consequently, a separate destroy workflow cannot access the state    created by the deployment workflow. As a result manual removal of the resources will be required.
+#### IAM Permissions and Access Control
 
-Future improvement: Configure a remote Terraform backend, such as Amazon S3, with appropriate state locking and access controls. This would allow separate CI/CD workflows to share    persistent Terraform state safely.
+The GithubActionsTerraformRole uses an attached IAM permissions policy to authorize Terraform operations against AWS resources.
+
+The policy grants the permissions required to:
+
+**EC2 and VPC:** Create, modify, describe, and delete the networking resources and EC2 instances required by the deployment.
+
+**Elastic Load Balancing:** Create and manage the Application Load Balancer, listeners, target groups, and target registrations.
+
+**Terraform State (Amazon S3):** List the state bucket and read, write, and delete objects under the highly-available-web-deployment/ prefix.
+
+**State Locking:** Access the S3 lockfile required for native Terraform state locking.
+
+#### Terraform State Management
+ Terraform uses an Amazon S3 remote backend to store persistent state, with native S3 state locking enabled to prevent concurrent operations from modifying the state simultaneously. This allows separate GitHub Actions deployment and destroy workflows to access the same state, enabling safe and consistent infrastructure lifecycle management.
+
+**Security and Reliability:** The S3 backend uses restricted IAM permissions and bucket access policies to control access to the state file.
 
 ## Cost Considerations
 
@@ -303,3 +318,4 @@ Terraform can be used to remove the infrastructure when the environment is no lo
 ```
 terraform destroy
 ```
+Alternatively, trigger the pre-configured `terraform-destroy` GitHub Actions workflow to remove the Terraform-managed infrastructure.
