@@ -22,5 +22,5 @@ output "alb_dns_name" {
 
 output "backend_bucket_name" {
   description = "state file bucket name"
-  value = var.backend_bucket_name
+  value       = var.backend_bucket_name
 }

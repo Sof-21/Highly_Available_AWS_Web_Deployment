@@ -41,6 +41,6 @@ variable "node_name_b" {
 
 variable "backend_bucket_name" {
   description = "Name of the s3 bucket where tfstate is stored"
-  type = string
-  default = "sof-terraform-projects-states"
+  type        = string
+  default     = "sof-terraform-projects-states"
 }
