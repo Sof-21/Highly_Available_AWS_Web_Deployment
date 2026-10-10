@@ -19,3 +19,8 @@ output "alb_dns_name" {
   description = "DNS name of the Application Load Balancer."
   value       = aws_lb.ha_lb.dns_name
 }
+
+output "backend_bucket_name" {
+  description = "state file bucket name"
+  value       = var.backend_bucket_name
+}
