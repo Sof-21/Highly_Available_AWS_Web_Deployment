@@ -7,6 +7,12 @@ The project focuses on network segmentation, high availability, controlled admin
 
 Git is used as the source of truth for the infrastructure code, while Terraform is used to provision and manage the AWS environment.
 
+## Tech Stack
+<p>
+  <img src="https://skillicons.dev/icons?i=terraform,aws,nginx,git,githubactions&theme=dark" />
+</p>
+
+
 ## Technologies
 
 - AWS VPC
